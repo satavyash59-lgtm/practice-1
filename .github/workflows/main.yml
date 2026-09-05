@@ -1,22 +1,25 @@
-name: Q2 Release Notes
+name: Q1 Release Notes
 
 on:
   push:
-    branches: [main] 
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
     timeout-minutes: 10
+
     strategy:
-      fail-fast: false 
-      matrix: 
-          os: [ubuntu-latest, ubuntu-22.04]
-          node: [18,20]
-          exclude:
-            - os: ubuntu-22.04
-              node: 18  
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-22.04]
+        node: [18,20]
+
+        exclude:
+          - os: ubuntu-22.04
+            node: 18
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,25 +27,32 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Print Versions
-        run: |
-          node -v
-          npm -v
+       run: |
+         node -v
+         npm -v
       - name: Write Report
         run: |
-          mkdir -p out
-          echo "OS: ${{ matrix.os }}, Node: ${{ matrix.node }}, Run: ${{ github.run_number }}"
-            > "out/report-${{ matrix.os }}-${{ matrix.node }}.txt"
+         mkdir -p out
+         echo "OS: ${{ matrix.os }}, Node: ${{ matrix.node }}, Rn: ${{ github.run_number }}"
+          > "out/report-${{ matrix.os }}-${{ matrix.node }}.txt"
+
       - uses: actions/upload-artifact@v4
-        with: 
+        with:
           name: report-${{ matrix.os }}-${{ matrix.node }}
-          path: out/report-${{ matrix.os }}-${{ matrix.node }}.txt 
-collect: 
-  needs: build
-  if: always()
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/download-artifact@v4
-      with:
-        path: all-reports
-    - name: Print all reports
-      run: find all-reports -type f -exec cat {} \;
+          path: out/report-${{ matrix.os }}-${{ matrix.node }}.txt
+
+collect:
+   needs: build
+   if: always()
+   runs-on: ubuntu-latest
+   steps: 
+     - uses: actions/download-artifact@v4
+       with:
+         patch: all-report
+
+     - name: print all reports
+       run: find all-reports -type f -exec cat {} \;
+
+     
+    
+    
