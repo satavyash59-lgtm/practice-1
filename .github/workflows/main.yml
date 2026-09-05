@@ -1,4 +1,4 @@
-name: Q2 Matrix Build
+name: Q2 Release Notes
 
 on:
   push:
@@ -24,16 +24,15 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Print versions
+      - name: Print Versions
         run: |
           node -v
           npm -v
 
-      - name: Write report
+      - name: Write Report
         run: |
           mkdir -p out
-          echo "OS: ${{ matrix.os }}, Node: ${{ matrix.node }}, Run: ${{ github.run_number }}" \
-            > "out/report-${{ matrix.os }}-${{ matrix.node }}.txt"
+          echo "OS: ${{ matrix.os }}, Node: ${{ matrix.node }}, Run: ${{ github.run_number }}" > "out/report-${{ matrix.os }}-${{ matrix.node }}.txt"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -50,4 +49,4 @@ jobs:
           path: all-reports
 
       - name: Print all reports
-        run: find all-reports -type f -exec cat {} \;
+        run: find all-reports -type f -exec cat {} +
